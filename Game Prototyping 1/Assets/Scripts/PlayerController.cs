@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,7 +9,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private float m_speed;
     [SerializeField] private Vector2 m_playerDirection;
-
+    [SerializeField] private float m_jumpForce;
+    private bool m_groundCheck; 
 
     private void Awake()
     {
@@ -23,15 +25,18 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        m_rigidbody.linearVelocity = m_playerDirection * (m_speed * Time.deltaTime);
+        m_rigidbody.linearVelocityX = m_playerDirection.x * (m_speed * Time.deltaTime);
+        if (m_rigidbody.linearVelocityY == 0)
+            m_groundCheck = true;
+        else
+            m_groundCheck = false;
     }
 
     // Update is called once per frame
     void Update()
     {
         m_playerDirection.x = m_inputMap.actions.FindAction("Move").ReadValue<float>();
-
-
+  
     }
 
     public void Handle_Move(InputAction.CallbackContext ctx)
@@ -50,7 +55,11 @@ public class PlayerController : MonoBehaviour
     {
         if (ctx.performed)
         {
-            Debug.Log($"Jump");
+            if (m_groundCheck)
+            {
+                m_rigidbody.AddForce(Vector2.up * m_jumpForce, ForceMode2D.Impulse);
+                Debug.Log($"Jump");
+            }
         }
     }
 
@@ -69,4 +78,5 @@ public class PlayerController : MonoBehaviour
             Debug.Log($"Button_DoubleTap");
         }
     }
+
 }
