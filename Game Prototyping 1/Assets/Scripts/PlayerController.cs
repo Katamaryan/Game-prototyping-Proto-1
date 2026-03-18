@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float m_speed;
     [SerializeField] private Vector2 m_playerDirection;
     [SerializeField] private float m_jumpForce;
-    private bool m_groundCheck; 
+    [SerializeField] private bool m_groundCheck; 
 
     private void Awake()
     {
