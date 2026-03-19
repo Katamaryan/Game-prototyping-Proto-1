@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Damage : MonoBehaviour
@@ -6,7 +7,7 @@ public class Damage : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        Destroy(gameObject, 0.2f);
     }
 
     private void Update()
@@ -16,6 +17,7 @@ public class Damage : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        
+        m_damageTarget = collision.gameObject.GetComponent<GameObject>();
     }
+
 }

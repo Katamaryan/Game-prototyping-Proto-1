@@ -10,7 +10,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float m_speed;
     [SerializeField] private Vector2 m_playerDirection;
     [SerializeField] private float m_jumpForce;
-    [SerializeField] private bool m_groundCheck; 
+    [SerializeField] private bool m_groundCheck;
+    private Vector3 m_lastDirection;
+
+    [SerializeField] private GameObject m_slashPrefab;
+    [SerializeField] private Transform m_firePoint;
+    [SerializeField] float m_slashRate;
+    private float m_slashTimeout = 0;
+
 
     private void Awake()
     {
@@ -36,7 +43,11 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         m_playerDirection.x = m_inputMap.actions.FindAction("Move").ReadValue<float>();
-  
+
+        if (m_playerDirection != Vector2.zero)
+        {
+            m_lastDirection = m_playerDirection;
+        }
     }
 
     public void Handle_Move(InputAction.CallbackContext ctx)
@@ -65,8 +76,13 @@ public class PlayerController : MonoBehaviour
 
     public void Handle_Button_Basic(InputAction.CallbackContext ctx)
     {
-        if (ctx.performed)
+        if (ctx.performed && Time.time > m_slashTimeout)
         {
+            if (m_lastDirection == Vector3.zero)
+                m_lastDirection = Vector3.right;
+
+            m_slashTimeout = Time.time + m_slashRate;
+            GameObject spawnedSlash = Instantiate(m_slashPrefab, m_firePoint.position + m_lastDirection, Quaternion.identity);
             Debug.Log($"Button_Basic");
         }
     }
