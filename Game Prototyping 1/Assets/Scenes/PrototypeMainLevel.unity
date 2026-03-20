@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 380933196}
   m_Layer: 0
   m_Name: Character
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -157,8 +157,11 @@ MonoBehaviour:
   m_jumpForce: 10
   m_groundCheck: 0
   m_slashPrefab: {fileID: 1365972450344591400, guid: 6023d44c9dd20b74682fa1ca717f462b, type: 3}
+  m_swordThrownPrefab: {fileID: 4229200627042359189, guid: 295d0b359bbaeea408506fe37eb80999, type: 3}
   m_firePoint: {fileID: 380933195}
-  m_slashRate: 0
+  m_slashRate: 1
+  m_throwSpeed: 10
+  m_isSwordHeld: 0
 --- !u!50 &380933192
 Rigidbody2D:
   serializedVersion: 5
@@ -445,7 +448,7 @@ GameObject:
   - component: {fileID: 402439286}
   - component: {fileID: 402439285}
   m_Layer: 0
-  m_Name: Square (4)
+  m_Name: MoveableSquare
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -523,7 +526,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!212 &402439287
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1279,7 +1282,7 @@ GameObject:
   - component: {fileID: 1842642062}
   m_Layer: 0
   m_Name: Sword
-  m_TagString: Untagged
+  m_TagString: Sword Held
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1362,6 +1365,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2026355631074371198, guid: 295d0b359bbaeea408506fe37eb80999, type: 3}
+      propertyPath: m_BodyType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4229200627042359189, guid: 295d0b359bbaeea408506fe37eb80999, type: 3}
       propertyPath: m_Name
       value: SwordThrown
