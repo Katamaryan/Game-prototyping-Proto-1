@@ -15,7 +15,7 @@ public class Damage : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         m_damageTarget = collision.gameObject.GetComponent<GameObject>();
     }

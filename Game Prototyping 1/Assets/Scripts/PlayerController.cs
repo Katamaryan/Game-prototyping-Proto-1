@@ -16,10 +16,12 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private GameObject m_slashPrefab;
     [SerializeField] private GameObject m_swordThrownPrefab;
+    GameObject m_spawnedSwordThrown;
     [SerializeField] private Transform m_firePoint;
     [SerializeField] private float m_slashRate;
     [SerializeField] private float m_throwSpeed;
     private float m_slashTimeout = 0;
+    private float m_throwTimeout = 0;
     [SerializeField] private bool m_isSwordHeld;
 
 
@@ -39,7 +41,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         m_rigidbody.linearVelocityX = m_playerDirection.x * (m_speed * Time.deltaTime);
-        if (m_rigidbody.linearVelocityY == 0)
+        if (m_rigidbody.linearVelocityY >= -0.0001f && m_rigidbody.linearVelocityY <= 0.0001f)
             m_groundCheck = true;
         else
             m_groundCheck = false;
@@ -93,23 +95,34 @@ public class PlayerController : MonoBehaviour
             Debug.Log($"Button_Basic");
         }
     }
-
+  
     public void Handle_Button_DoubleTap(InputAction.CallbackContext ctx)
     {
-        if (ctx.performed && m_isSwordHeld == true)
+        if (ctx.performed && m_isSwordHeld == false)
         {
+            Destroy(m_spawnedSwordThrown);
+            m_isSwordHeld = true;
+            m_swordHeld.SetActive(true);
+            m_throwTimeout = Time.time + m_slashRate;
+            Debug.Log("Destroy thing");
+        }
+
+        if (ctx.performed && m_isSwordHeld == true && Time.time > m_throwTimeout)
+        {
+            
             m_isSwordHeld = false;
             m_swordHeld.SetActive(false);
             if (m_lastDirection == Vector3.zero)
                 m_lastDirection = Vector3.right;
 
-            GameObject spawnedSwordThrown = Instantiate(m_swordThrownPrefab, m_firePoint.position + m_lastDirection * 2f, Quaternion.identity);
-            Rigidbody2D spawnedSwordrb = spawnedSwordThrown.GetComponent<Rigidbody2D>();
+            m_spawnedSwordThrown = Instantiate(m_swordThrownPrefab, m_firePoint.position + m_lastDirection * 2f, Quaternion.identity);
+            Rigidbody2D spawnedSwordrb = m_spawnedSwordThrown.GetComponent<Rigidbody2D>();
 
             if (spawnedSwordrb != null)
                 spawnedSwordrb.AddForce(m_lastDirection * m_throwSpeed, ForceMode2D.Impulse);
 
             Debug.Log($"Button_DoubleTap");
+                
         }
     }
 
