@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 3
   tags:
   - Sword Held
+  - Enemy
+  - Player Attack
+  - Wall
+  - Floor
   layers:
   - Default
   - TransparentFX

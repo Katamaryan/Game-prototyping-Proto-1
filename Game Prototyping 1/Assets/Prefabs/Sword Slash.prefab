@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1572305990018579169}
   m_Layer: 0
   m_Name: Sword Slash
-  m_TagString: Untagged
+  m_TagString: Player Attack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

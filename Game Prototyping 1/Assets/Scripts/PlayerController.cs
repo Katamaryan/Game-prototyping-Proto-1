@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
     private PlayerInput m_inputMap;
     private Rigidbody2D m_rigidbody;
     private GameObject m_swordHeld;
+    private Rigidbody2D m_heldObject;
+    [SerializeField] private Transform m_spawnPoint;
 
     [SerializeField] private float m_speed;
     [SerializeField] private Vector2 m_playerDirection;
@@ -22,7 +24,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float m_throwSpeed;
     private float m_slashTimeout = 0;
     private float m_throwTimeout = 0;
-    [SerializeField] private bool m_isSwordHeld;
+    private bool m_isSwordHeld;
+    private bool m_isGrab;
 
 
     private void Awake()
@@ -41,6 +44,9 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         m_rigidbody.linearVelocityX = m_playerDirection.x * (m_speed * Time.deltaTime);
+        if (m_heldObject != null) {
+            //m_heldObject.
+                }
         if (m_rigidbody.linearVelocityY >= -0.0001f && m_rigidbody.linearVelocityY <= 0.0001f)
             m_groundCheck = true;
         else
@@ -85,14 +91,23 @@ public class PlayerController : MonoBehaviour
 
     public void Handle_Button_Basic(InputAction.CallbackContext ctx)
     {
+        if (ctx.performed)
+        {
+            if (m_spawnedSwordThrown == null)
+                m_isSwordHeld = true; m_swordHeld.SetActive(true);
+
+        }
+
         if (ctx.performed && Time.time > m_slashTimeout && m_isSwordHeld == true)
         {
+
             if (m_lastDirection == Vector3.zero)
                 m_lastDirection = Vector3.right;
 
             m_slashTimeout = Time.time + m_slashRate;
             GameObject spawnedSlash = Instantiate(m_slashPrefab, m_firePoint.position + m_lastDirection * 1.2f, Quaternion.identity);
             Debug.Log($"Button_Basic");
+
         }
     }
   
@@ -115,7 +130,7 @@ public class PlayerController : MonoBehaviour
             if (m_lastDirection == Vector3.zero)
                 m_lastDirection = Vector3.right;
 
-            m_spawnedSwordThrown = Instantiate(m_swordThrownPrefab, m_firePoint.position + m_lastDirection * 2f, Quaternion.identity);
+            m_spawnedSwordThrown = Instantiate(m_swordThrownPrefab, m_firePoint.position + m_lastDirection * 1.5f, Quaternion.identity);
             Rigidbody2D spawnedSwordrb = m_spawnedSwordThrown.GetComponent<Rigidbody2D>();
 
             if (spawnedSwordrb != null)
@@ -126,4 +141,32 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void Handle_Button_Hold(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed)
+        {
+            m_isGrab = true;
+        }
+        if (ctx.canceled)
+        {
+            m_isGrab = false;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            transform.position = m_spawnPoint.position;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Moveable Object") && m_isGrab == true)
+        {
+            Debug.Log("OBJECT GRABBED");
+            //m_heldObject = collision.gameObject.GetComponent<Rigidbody2D>;
+        }
+    }
 }

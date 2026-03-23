@@ -27,8 +27,14 @@ public class Throwing : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        m_collision = collision.gameObject;
-        m_rigidbody.linearVelocity = Vector3.zero;
+        if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("Enemy"))
+        { 
+            m_collision = collision.gameObject;
+        }
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Destroy(gameObject);
+        }
     }
 
     //save for later 
