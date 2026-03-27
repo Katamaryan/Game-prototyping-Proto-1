@@ -7,13 +7,13 @@ public class PlayerController : MonoBehaviour
     private PlayerInput m_inputMap;
     private Rigidbody2D m_rigidbody;
     private GameObject m_swordHeld;
-    private Rigidbody2D m_heldObject;
     [SerializeField] private Transform m_spawnPoint;
 
     [SerializeField] private float m_speed;
     [SerializeField] private Vector2 m_playerDirection;
     [SerializeField] private float m_jumpForce;
     [SerializeField] private bool m_groundCheck;
+    private bool m_isTouchingFloor;
     private Vector3 m_lastDirection;
 
     [SerializeField] private GameObject m_slashPrefab;
@@ -44,13 +44,6 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         m_rigidbody.linearVelocityX = m_playerDirection.x * (m_speed * Time.deltaTime);
-        if (m_heldObject != null) {
-            //m_heldObject.
-                }
-        if (m_rigidbody.linearVelocityY >= -0.0001f && m_rigidbody.linearVelocityY <= 0.0001f)
-            m_groundCheck = true;
-        else
-            m_groundCheck = false;
     }
 
     // Update is called once per frame
@@ -81,6 +74,11 @@ public class PlayerController : MonoBehaviour
     {
         if (ctx.performed)
         {
+            if ((m_rigidbody.linearVelocityY >= -0.0001f && m_rigidbody.linearVelocityY <= 0.0001f) || (m_isTouchingFloor && m_rigidbody.linearVelocityY >= -0.5f && m_rigidbody.linearVelocityY <= 0.15f))
+                m_groundCheck = true;
+            else
+                m_groundCheck = false;
+
             if (m_groundCheck)
             {
                 m_rigidbody.AddForce(Vector2.up * m_jumpForce, ForceMode2D.Impulse);
@@ -143,14 +141,7 @@ public class PlayerController : MonoBehaviour
 
     public void Handle_Button_Hold(InputAction.CallbackContext ctx)
     {
-        if (ctx.performed)
-        {
-            m_isGrab = true;
-        }
-        if (ctx.canceled)
-        {
-            m_isGrab = false;
-        }
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -158,6 +149,18 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             transform.position = m_spawnPoint.position;
+        }
+        if (collision.gameObject.CompareTag("Floor"))
+        {
+            m_isTouchingFloor = true;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Floor"))
+        {
+            m_isTouchingFloor = false;
         }
     }
 

@@ -10,6 +10,7 @@ TagManager:
   - Wall
   - Floor
   - Moveable Object
+  - Ladder
   layers:
   - Default
   - TransparentFX

@@ -19,7 +19,7 @@ public class DoorButton : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        
+        if (!m_isButtonActive)
         {
             m_isButtonActive = true;
             for (int i = 0; i < m_doorArray1.Length; i++)
