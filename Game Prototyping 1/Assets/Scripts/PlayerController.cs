@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float m_jumpForce;
     [SerializeField] private bool m_groundCheck;
     private bool m_isTouchingFloor;
+    private bool m_isTouchingLadder;
     private Vector3 m_lastDirection;
 
     [SerializeField] private GameObject m_slashPrefab;
@@ -154,6 +155,10 @@ public class PlayerController : MonoBehaviour
         {
             m_isTouchingFloor = true;
         }
+        if (collision.gameObject.CompareTag("Ladder"))
+        {
+            m_isTouchingLadder = true;
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -162,14 +167,9 @@ public class PlayerController : MonoBehaviour
         {
             m_isTouchingFloor = false;
         }
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Moveable Object") && m_isGrab == true)
+        if (collision.gameObject.CompareTag("Ladder"))
         {
-            Debug.Log("OBJECT GRABBED");
-            //m_heldObject = collision.gameObject.GetComponent<Rigidbody2D>;
+            m_isTouchingLadder = true;
         }
     }
 }
