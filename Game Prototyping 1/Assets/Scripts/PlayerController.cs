@@ -85,6 +85,11 @@ public class PlayerController : MonoBehaviour
                 m_rigidbody.AddForce(Vector2.up * m_jumpForce, ForceMode2D.Impulse);
                 Debug.Log($"Jump");
             }
+            //if (m_isTouchingLadder)
+            //{
+            //    Debug.Log("ladder in use");
+            //    m_rigidbody.linearVelocityY = 10 ;
+            //}
         }
     }
 
@@ -155,10 +160,6 @@ public class PlayerController : MonoBehaviour
         {
             m_isTouchingFloor = true;
         }
-        if (collision.gameObject.CompareTag("Ladder"))
-        {
-            m_isTouchingLadder = true;
-        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -167,9 +168,21 @@ public class PlayerController : MonoBehaviour
         {
             m_isTouchingFloor = false;
         }
-        if (collision.gameObject.CompareTag("Ladder"))
-        {
-            m_isTouchingLadder = true;
-        }
     }
+
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if (collision.gameObject.CompareTag("Ladder"))
+    //    {
+    //        m_isTouchingLadder = true;
+    //    }
+    //}
+
+    //private void OnTriggerExit2D(Collider2D collision)
+    //{
+    //    if (collision.gameObject.CompareTag("Ladder"))
+    //    {
+    //        m_isTouchingLadder = false;
+    //    }
+    //}
 }
