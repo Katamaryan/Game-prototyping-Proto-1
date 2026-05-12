@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 
 public class Goal : MonoBehaviour
@@ -8,6 +7,7 @@ public class Goal : MonoBehaviour
     // Update is called once per frame
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //activates the game win text
         if (collision != null)
         {
             m_TextMeshPro.SetActive(true);

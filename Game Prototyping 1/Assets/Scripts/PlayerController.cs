@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -31,25 +30,26 @@ public class PlayerController : MonoBehaviour
     {
         m_inputMap = GetComponent<PlayerInput>();
         m_rigidbody = GetComponent<Rigidbody2D>();
-        m_swordHeld = GameObject.FindWithTag("Sword Held").gameObject; /*GetComponentInChildren<Transform>(GameObject.FindWithTag("Sword Held"));*/
+        m_swordHeld = GameObject.FindWithTag("Sword Held").gameObject;
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //changes the held sword's position to the right upon starting and makes sure it is seen as held by the rest of the code
         m_swordHeld.transform.position = transform.position + Vector3.right;
         m_isSwordHeld = true;
     }
 
     private void FixedUpdate()
     {
+        //moves the player in the direction of input and ensures and makes sure it is tied to the framerate
         m_rigidbody.linearVelocityX = m_playerDirection.x * (m_speed * Time.deltaTime);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-
+        //changes the last direction the player was facing and moves the held sword to that side
         if (m_playerDirection != Vector2.zero)
         {
             m_lastDirection = m_playerDirection;
@@ -62,12 +62,10 @@ public class PlayerController : MonoBehaviour
         if (ctx.performed)
         {
             m_playerDirection.x = m_inputMap.actions.FindAction("Move").ReadValue<float>();
-            Debug.Log($"Move {ctx.ReadValue<float>()}");
         }
         if (ctx.canceled)
         {
             m_playerDirection.x = m_inputMap.actions.FindAction("Move").ReadValue<float>();
-            Debug.Log($"Move {ctx.ReadValue<float>()}");
         }
     }
     public void Handle_Jump(InputAction.CallbackContext ctx)
@@ -82,7 +80,6 @@ public class PlayerController : MonoBehaviour
             if (m_groundCheck)
             {
                 m_rigidbody.AddForce(Vector2.up * m_jumpForce, ForceMode2D.Impulse);
-                Debug.Log($"Jump");
             }
         }
     }
@@ -93,9 +90,8 @@ public class PlayerController : MonoBehaviour
         {
             if (m_spawnedSwordThrown == null)
                 m_isSwordHeld = true; m_swordHeld.SetActive(true);
-
         }
-
+        //spawns a slash prefab object if the input is pressed and the cooldown is over then reactivates the cooldown
         if (ctx.performed && Time.time > m_slashTimeout && m_isSwordHeld == true)
         {
 
@@ -104,7 +100,6 @@ public class PlayerController : MonoBehaviour
 
             m_slashTimeout = Time.time + m_slashRate;
             GameObject spawnedSlash = Instantiate(m_slashPrefab, m_firePoint.position + m_lastDirection * 1.2f, Quaternion.identity);
-            Debug.Log($"Button_Basic");
 
         }
     }
@@ -117,12 +112,11 @@ public class PlayerController : MonoBehaviour
             m_isSwordHeld = true;
             m_swordHeld.SetActive(true);
             m_throwTimeout = Time.time + m_slashRate;
-            Debug.Log("Destroy thing");
         }
 
         if (ctx.performed && m_isSwordHeld == true && Time.time > m_throwTimeout)
         {
-            
+            //makes it so the sword is no longer held by the player and hides the held version of the sword from view also shoots the thrown version of the sword in the last faced direction
             m_isSwordHeld = false;
             m_swordHeld.SetActive(false);
             if (m_lastDirection == Vector3.zero)
@@ -133,18 +127,17 @@ public class PlayerController : MonoBehaviour
 
             if (spawnedSwordrb != null)
                 spawnedSwordrb.AddForce(m_lastDirection * m_throwSpeed, ForceMode2D.Impulse);
-
-            Debug.Log($"Button_DoubleTap");
-                
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        //respawns the player when hitting an enemy 
         if (collision.gameObject.CompareTag("Enemy"))
         {
             transform.position = m_spawnPoint.position;
         }
+        //checks the player is grounded
         if (collision.gameObject.CompareTag("Floor") || collision.gameObject.CompareTag("Player Attack"))
         {
             m_isTouchingFloor = true;

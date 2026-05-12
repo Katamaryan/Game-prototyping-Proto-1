@@ -1,4 +1,3 @@
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public class EnemyTarget : MonoBehaviour
@@ -29,27 +28,27 @@ public class EnemyTarget : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        //Checks that the enemy isnt colliding with the floor or player so that they don't make the enemy turn directions
         if (!collision.gameObject.CompareTag("Floor") && !collision.gameObject.CompareTag("Player"))
         {
+            //checks the enemy is colliding with a player attack and then damages it
             if (collision.gameObject.CompareTag("Player Attack"))
             {
                 m_health -= 1;
-                Debug.Log(m_health);
                 if (m_health < 0)
                     Destroy(gameObject);
             }
-
+            //swaps direction when the enemy collides with a wall or obstacle
             else
             {
                 m_enemyDirection = -m_enemyDirection;
-                Debug.Log(m_enemyDirection);
-                Debug.Log("from collision");
             }
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //checks the enemy is colliding with the player slash attack trigger and deals damage also pushs the enemy back 
         if (!collision.gameObject.CompareTag("Floor"))
         {
             if (collision.gameObject.CompareTag("Player Attack"))
@@ -60,7 +59,6 @@ public class EnemyTarget : MonoBehaviour
                 distanceFromAttack = distanceFromAttack.normalized;
                 m_rigidbody.AddForce( distanceFromAttack * m_knockback, ForceMode2D.Impulse);
                 m_health -= 1;
-                Debug.Log(m_health);
                 if (m_health < 0)
                     Destroy(gameObject);
             }
@@ -68,8 +66,6 @@ public class EnemyTarget : MonoBehaviour
             else
             {
                 m_enemyDirection = -m_enemyDirection;
-                Debug.Log(m_enemyDirection);
-                Debug.Log("from trigger");
             }
         }
     }
