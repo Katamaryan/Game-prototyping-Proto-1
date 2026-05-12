@@ -24,7 +24,8 @@ public class PlayerController : MonoBehaviour
     private float m_slashTimeout = 0;
     private float m_throwTimeout = 0;
     public bool m_isSwordHeld;
-
+    [SerializeField] GameObject m_MoveMessage, m_attackMessage;
+    private bool m_isFirstMove = true, m_isFirstAttack = true;
 
     private void Awake()
     {
@@ -66,6 +67,11 @@ public class PlayerController : MonoBehaviour
         if (ctx.canceled)
         {
             m_playerDirection.x = m_inputMap.actions.FindAction("Move").ReadValue<float>();
+        }
+        if (ctx.canceled && m_isFirstMove)
+        {
+            m_isFirstMove = false;
+            m_MoveMessage.SetActive(false);
         }
     }
     public void Handle_Jump(InputAction.CallbackContext ctx)
@@ -127,6 +133,12 @@ public class PlayerController : MonoBehaviour
 
             if (spawnedSwordrb != null)
                 spawnedSwordrb.AddForce(m_lastDirection * m_throwSpeed, ForceMode2D.Impulse);
+        }
+
+        if (ctx.canceled && m_isFirstAttack)
+        {
+            m_isFirstAttack = false;
+            m_attackMessage.SetActive(false);
         }
     }
 
