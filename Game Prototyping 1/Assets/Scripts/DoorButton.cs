@@ -6,33 +6,41 @@ public class DoorButton : MonoBehaviour
     [SerializeField] public GameObject[] m_doorArray2;
     private bool m_isButtonActive;
     private GameObject m_buttonActivator;
+    [SerializeField] private bool m_isSwordInteractable;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (!m_isButtonActive)
+        if (m_isSwordInteractable && collision.gameObject.CompareTag("Player Attack"))
         {
-            m_buttonActivator = collision.gameObject;
-            m_isButtonActive = true;
-            for (int i = 0; i < m_doorArray1.Length; i++)
-            { 
-                m_doorArray1[i].SetActive(false);
-                m_doorArray2[i].SetActive(true);
+            if (!m_isButtonActive)
+            {
+                m_buttonActivator = collision.gameObject;
+                m_isButtonActive = true;
+                for (int i = 0; i < m_doorArray1.Length; i++)
+                {
+                    m_doorArray1[i].SetActive(false);
+                    m_doorArray2[i].SetActive(true);
+                }
+            }
+        }
+
+        if (!m_isSwordInteractable && !collision.gameObject.CompareTag("Player Attack"))
+        {
+            if (!m_isButtonActive)
+            {
+                m_buttonActivator = collision.gameObject;
+                m_isButtonActive = true;
+                for (int i = 0; i < m_doorArray1.Length; i++)
+                {
+                    m_doorArray1[i].SetActive(false);
+                    m_doorArray2[i].SetActive(true);
+                }
             }
         }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
         if (m_isButtonActive && collision.gameObject == m_buttonActivator)
         {

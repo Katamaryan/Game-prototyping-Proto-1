@@ -14,19 +14,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float m_jumpForce;
     [SerializeField] private bool m_groundCheck;
     private bool m_isTouchingFloor;
-    private bool m_isTouchingLadder;
     private Vector3 m_lastDirection;
 
     [SerializeField] private GameObject m_slashPrefab;
     [SerializeField] private GameObject m_swordThrownPrefab;
-    GameObject m_spawnedSwordThrown;
+    [SerializeField] GameObject m_spawnedSwordThrown;
     [SerializeField] private Transform m_firePoint;
     [SerializeField] private float m_slashRate;
     [SerializeField] private float m_throwSpeed;
     private float m_slashTimeout = 0;
     private float m_throwTimeout = 0;
-    private bool m_isSwordHeld;
-    private bool m_isGrab;
+    public bool m_isSwordHeld;
 
 
     private void Awake()
@@ -50,7 +48,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        m_playerDirection.x = m_inputMap.actions.FindAction("Move").ReadValue<float>();
+        
 
         if (m_playerDirection != Vector2.zero)
         {
@@ -63,11 +61,12 @@ public class PlayerController : MonoBehaviour
     {
         if (ctx.performed)
         {
-            
+            m_playerDirection.x = m_inputMap.actions.FindAction("Move").ReadValue<float>();
             Debug.Log($"Move {ctx.ReadValue<float>()}");
         }
         if (ctx.canceled)
         {
+            m_playerDirection.x = m_inputMap.actions.FindAction("Move").ReadValue<float>();
             Debug.Log($"Move {ctx.ReadValue<float>()}");
         }
     }
@@ -85,11 +84,6 @@ public class PlayerController : MonoBehaviour
                 m_rigidbody.AddForce(Vector2.up * m_jumpForce, ForceMode2D.Impulse);
                 Debug.Log($"Jump");
             }
-            //if (m_isTouchingLadder)
-            //{
-            //    Debug.Log("ladder in use");
-            //    m_rigidbody.linearVelocityY = 10 ;
-            //}
         }
     }
 
@@ -143,11 +137,6 @@ public class PlayerController : MonoBehaviour
             Debug.Log($"Button_DoubleTap");
                 
         }
-    }
-
-    public void Handle_Button_Hold(InputAction.CallbackContext ctx)
-    {
-
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
