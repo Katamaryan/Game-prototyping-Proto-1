@@ -145,7 +145,7 @@ public class PlayerController : MonoBehaviour
         {
             transform.position = m_spawnPoint.position;
         }
-        if (collision.gameObject.CompareTag("Floor"))
+        if (collision.gameObject.CompareTag("Floor") || collision.gameObject.CompareTag("Player Attack"))
         {
             m_isTouchingFloor = true;
         }
@@ -153,25 +153,10 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Floor"))
+        if (collision.gameObject.CompareTag("Floor") || collision.gameObject.CompareTag("Player Attack"))
         {
             m_isTouchingFloor = false;
         }
     }
 
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    if (collision.gameObject.CompareTag("Ladder"))
-    //    {
-    //        m_isTouchingLadder = true;
-    //    }
-    //}
-
-    //private void OnTriggerExit2D(Collider2D collision)
-    //{
-    //    if (collision.gameObject.CompareTag("Ladder"))
-    //    {
-    //        m_isTouchingLadder = false;
-    //    }
-    //}
 }

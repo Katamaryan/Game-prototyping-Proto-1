@@ -11,6 +11,7 @@ public class Throwing : MonoBehaviour
     Rigidbody2D m_rigidbody;
     private float m_destroyTimer;
     GameObject m_collision;
+    bool m_isHit;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -31,14 +32,15 @@ public class Throwing : MonoBehaviour
             m_swordHeld.SetActive(true);
             m_playerController.m_isSwordHeld = true;
         }
-        if (m_collision != null)
+        if (m_isHit)
             m_rigidbody.linearVelocity = Vector3.zero;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("Enemy"))
-        { 
+        {
+            m_isHit = true;
             m_collision = collision.gameObject;
         }
         if (collision.gameObject.CompareTag("Enemy"))
